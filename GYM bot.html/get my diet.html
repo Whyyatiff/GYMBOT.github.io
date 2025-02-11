@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personalized Diet Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Baloo 2", sans-serif;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, #000000, #333333);
+            padding: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        header {
+            background: #222;
+            padding: 1.5em 0;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .diet-plan {
+            background: #444;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: slideIn 1s ease-in-out;
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .day {
+            background: #222;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+        }
+        .day h2 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+        .meal p {
+            margin: 5px 0;
+        }
+        footer {
+            background: #222;
+            color: white;
+            padding: 15px 0;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+    </style>
+    <script>
+        /* Page Close Animation */
+        window.addEventListener('beforeunload', () => {
+            document.body.style.opacity = '0';
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Your Personalized Diet Plan</h1>
+    </header>
+    <section class="diet-plan">
+        <h2>Weekly Meal Plan</h2>
+        <div id="meal-plan"></div>
+    </section>
+
+    <script>
+        function getDietPlan() {
+            const params = new URLSearchParams(window.location.search);
+            const weight = parseInt(params.get("weight"));
+            let dietPlan = "";
+            let mealPlans = {
+                "0-40": {
+                    "Monday": ["Milk & Banana", "Vegetable Khichdi", "Dal & Roti"],
+                    "Tuesday": ["Boiled Egg & Toast", "Paneer Wrap", "Rice & Lentils"],
+                    "Wednesday": ["Smoothie & Nuts", "Grilled Cheese Sandwich", "Vegetable Curry & Roti"],
+                    "Thursday": ["Oatmeal & Apple", "Daal Chawal", "Sabzi & Roti"],
+                    "Friday": ["Cornflakes & Milk", "Veggie Pulao", "Mix Dal & Rice"],
+                    "Saturday": ["Poha & Curd", "Paneer Biryani", "Spinach & Roti"],
+                    "Sunday": ["Dosa & Coconut Chutney", "Stuffed Paratha", "Khichdi & Yogurt"]
+                },
+                "40-60": {
+                    "Monday": ["Oatmeal & Fruits", "Grilled Chicken & Quinoa", "Salmon & Steamed Veggies"],
+                    "Tuesday": ["Scrambled Eggs & Whole-Grain Toast", "Lentil Soup & Brown Rice", "Stir-fried Tofu & Vegetables"],
+                    "Wednesday": ["Greek Yogurt & Nuts", "Turkey Sandwich & Salad", "Baked Fish & Quinoa"],
+                    "Thursday": ["Smoothie with Banana, Berries & Almonds", "Chickpea Salad & Avocado Toast", "Grilled Chicken & Roasted Sweet Potatoes"],
+                    "Friday": ["Pancakes with Honey & Nuts", "Tuna Wrap & Fresh Veggies", "Stir-fry Beef & Brown Rice"],
+                    "Saturday": ["Peanut Butter Toast & Milk", "Quinoa Bowl with Grilled Paneer", "Baked Chicken with Steamed Greens"],
+                    "Sunday": ["Whole Grain Cereal & Fruit", "Mushroom & Spinach Pasta", "Lentil Soup & Whole-Wheat Bread"]
+                },
+                "60+": {
+                    "Monday": ["Protein Shake & Banana", "Brown Rice & Grilled Fish", "Chicken Breast & Steamed Veggies"],
+                    "Tuesday": ["Egg Whites & Whole-Grain Toast", "Quinoa & Chicken Curry", "Beef Stir-fry & Rice"],
+                    "Wednesday": ["Oats & Almonds", "Grilled Chicken Wrap", "Salmon & Quinoa Bowl"],
+                    "Thursday": ["Fruit Smoothie & Peanut Butter Toast", "Chickpea Curry & Rice", "Grilled Fish & Broccoli"],
+                    "Friday": ["Scrambled Eggs & Avocado Toast", "Turkey Sandwich & Salad", "Grilled Steak & Veggies"],
+                    "Saturday": ["Greek Yogurt & Granola", "Chicken & Sweet Potato Bowl", "Baked Fish & Greens"],
+                    "Sunday": ["Whole Grain Pancakes", "Brown Rice & Beans", "Lentil Soup & Grilled Chicken"]
+                }
+            };
+            
+            let selectedPlan = weight <= 40 ? mealPlans["0-40"] : weight <= 60 ? mealPlans["40-60"] : mealPlans["60+"];
+            for (let day in selectedPlan) {
+                dietPlan += `<div class="day"><h2>${day}</h2>`;
+                dietPlan += `<div class="meal"><p><b>Breakfast:</b> ${selectedPlan[day][0]}</p>`;
+                dietPlan += `<p><b>Lunch:</b> ${selectedPlan[day][1]}</p>`;
+                dietPlan += `<p><b>Dinner:</b> ${selectedPlan[day][2]}</p></div></div>`;
+            }
+            document.getElementById("meal-plan").innerHTML = dietPlan;
+        }
+        getDietPlan();
+    </script>
+</body>
+</html>
